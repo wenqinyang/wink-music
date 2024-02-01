@@ -1,21 +1,51 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : local
+ Source Server         : local_mysql
  Source Server Type    : MySQL
  Source Server Version : 80200 (8.2.0)
- Source Host           : 127.0.0.1:3306
+ Source Host           : 192.168.0.29:53306
  Source Schema         : wink_music
 
  Target Server Type    : MySQL
  Target Server Version : 80200 (8.2.0)
  File Encoding         : 65001
 
- Date: 29/01/2024 22:16:39
+ Date: 01/02/2024 19:03:57
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for permission
+-- ----------------------------
+DROP TABLE IF EXISTS `permission`;
+CREATE TABLE `permission` (
+  `id` bigint unsigned NOT NULL,
+  `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '接口路径',
+  `method` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '请求方式（0-get；1-post）',
+  `service` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '服务名',
+  `parent_id` int NOT NULL DEFAULT '0' COMMENT '父级权限id',
+  `create_by` bigint NOT NULL DEFAULT '0' COMMENT '创建人',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  `update_by` bigint DEFAULT NULL COMMENT '更新人',
+  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC COMMENT='系统权限表';
+
+-- ----------------------------
+-- Records of permission
+-- ----------------------------
+BEGIN;
+INSERT INTO `permission` (`id`, `name`, `url`, `method`, `service`, `parent_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (1, '用户管理', '/user/manager', 0, 'manager', 0, 0, '2024-01-31 11:17:34', NULL, '2024-01-31 11:19:22');
+INSERT INTO `permission` (`id`, `name`, `url`, `method`, `service`, `parent_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (2, '用户列表查询', '/user/list', 1, 'list', 1, 0, '2024-01-31 11:17:34', NULL, '2024-01-31 11:19:22');
+INSERT INTO `permission` (`id`, `name`, `url`, `method`, `service`, `parent_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (3, '删除用户', '/user/delete', 0, 'delete', 1, 0, '2024-01-31 11:17:34', NULL, '2024-01-31 11:19:22');
+INSERT INTO `permission` (`id`, `name`, `url`, `method`, `service`, `parent_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (4, '更新用户', '/user/update', 1, 'update', 1, 0, '2024-01-31 11:17:34', NULL, '2024-01-31 11:19:22');
+INSERT INTO `permission` (`id`, `name`, `url`, `method`, `service`, `parent_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (5, '新增用户', '/user/save', 1, 'save', 1, 0, '2024-01-31 11:17:34', NULL, '2024-01-31 11:19:22');
+INSERT INTO `permission` (`id`, `name`, `url`, `method`, `service`, `parent_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (6, '用户详情', '/user/getById', 0, 'getById', 1, 0, '2024-01-31 11:17:34', NULL, '2024-01-31 11:19:22');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for player
@@ -76,6 +106,62 @@ CREATE TABLE `player_song_sheet` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `player_song_sheet` (`player_id`, `song_sheet_id`, `taxis`, `create_time`, `update_time`, `create_by`, `update_by`) VALUES (4022819488557056, 4022829796190208, 0, '2024-01-14 06:56:25', '2024-01-27 15:25:41', 4022819488557056, 4022819488557056);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for role
+-- ----------------------------
+DROP TABLE IF EXISTS `role`;
+CREATE TABLE `role` (
+  `id` bigint unsigned NOT NULL,
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '名称',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注',
+  `create_by` bigint NOT NULL DEFAULT '0' COMMENT '创建人',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  `update_by` bigint DEFAULT NULL COMMENT '更新人',
+  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC COMMENT='系统角色表';
+
+-- ----------------------------
+-- Records of role
+-- ----------------------------
+BEGIN;
+INSERT INTO `role` (`id`, `name`, `remark`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (1, '超级管理员', '超管，拥有最高权限', 0, '2024-01-31 11:18:29', NULL, '2024-01-31 11:18:29');
+INSERT INTO `role` (`id`, `name`, `remark`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (2, '系统管理员', '管理员，拥有操作权限', 0, '2024-01-31 11:18:29', NULL, '2024-01-31 11:18:29');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for role_permission
+-- ----------------------------
+DROP TABLE IF EXISTS `role_permission`;
+CREATE TABLE `role_permission` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `role_id` bigint unsigned NOT NULL COMMENT '角色id',
+  `permission_id` bigint unsigned NOT NULL COMMENT '权限id',
+  `create_by` bigint NOT NULL DEFAULT '0' COMMENT '创建人',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  `update_by` bigint DEFAULT NULL COMMENT '更新人',
+  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC COMMENT='角色-权限关联表';
+
+-- ----------------------------
+-- Records of role_permission
+-- ----------------------------
+BEGIN;
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (1, 1, 1, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (2, 1, 2, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (3, 1, 3, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (4, 1, 4, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (5, 1, 5, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (6, 1, 6, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (7, 2, 1, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (8, 2, 2, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (9, 2, 3, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (10, 2, 4, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (11, 2, 5, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
+INSERT INTO `role_permission` (`id`, `role_id`, `permission_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (12, 2, 6, 0, '2024-01-31 11:18:37', NULL, '2024-01-31 11:18:37');
 COMMIT;
 
 -- ----------------------------
@@ -229,7 +315,32 @@ CREATE TABLE `user` (
 -- Records of user
 -- ----------------------------
 BEGIN;
+INSERT INTO `user` (`id`, `username`, `password`, `qq`, `email`, `status`, `create_ip`, `last_login_time`, `create_time`, `update_time`, `create_by`, `update_by`) VALUES (1, '超级管理员', '13500000001', '123123', '123123', 0, NULL, NULL, '2024-01-31 10:54:12', '2024-01-31 10:54:38', NULL, 1);
+INSERT INTO `user` (`id`, `username`, `password`, `qq`, `email`, `status`, `create_ip`, `last_login_time`, `create_time`, `update_time`, `create_by`, `update_by`) VALUES (2, '系统管理员', '13800000002', '2222', '222', 0, NULL, NULL, '2024-01-31 10:55:29', '2024-01-31 10:55:33', NULL, 2);
 INSERT INTO `user` (`id`, `username`, `password`, `qq`, `email`, `status`, `create_ip`, `last_login_time`, `create_time`, `update_time`, `create_by`, `update_by`) VALUES (4022816221063168, 'ycode', '3f5e9a56d9c9fa71ee5add253fe1ad99', '1', '1', 1, '1', '2020-05-17 23:33:32', '2024-01-14 06:58:22', '2024-01-27 15:04:05', 4022816221063168, 4022816221063168);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for user_role
+-- ----------------------------
+DROP TABLE IF EXISTS `user_role`;
+CREATE TABLE `user_role` (
+  `id` bigint unsigned NOT NULL,
+  `role_id` bigint unsigned NOT NULL COMMENT '角色id，数据来源于role表的主键',
+  `user_id` bigint unsigned NOT NULL COMMENT '用户id，数据来源于user表的主键',
+  `create_by` bigint NOT NULL DEFAULT '0' COMMENT '创建人',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  `update_by` bigint DEFAULT NULL COMMENT '更新人',
+  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC COMMENT='用户-角色关系表表';
+
+-- ----------------------------
+-- Records of user_role
+-- ----------------------------
+BEGIN;
+INSERT INTO `user_role` (`id`, `role_id`, `user_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (1, 1, 1, 0, '2024-01-31 11:18:51', NULL, '2024-01-31 11:18:51');
+INSERT INTO `user_role` (`id`, `role_id`, `user_id`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES (2, 2, 2, 0, '2024-01-31 11:18:51', NULL, '2024-01-31 11:18:51');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

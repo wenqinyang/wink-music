@@ -28,7 +28,10 @@ public enum ResultCodeEnum implements BaseErrorInfoInterface {
     /**
      * 业务错误 2001-2999
      */
-    INVALID_USER("2001", "该用户没有权限,请注册或者由管理员授权!")
+    NON_EXIST_USER("2000", "用户不存在"),
+    LOCKED_USER("2002", "用户被锁定"),
+    INVALID_USER("2003", "该用户没有权限,请注册或者由管理员授权"),
+    EXPIRE_TOKEN("2004", "token过期，请重新登录")
     ;
     /**
      * 状态码

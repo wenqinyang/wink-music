@@ -8,6 +8,7 @@ import com.wink.music.entity.po.User;
 import com.wink.music.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
@@ -27,11 +28,23 @@ import static com.wink.music.common.resepons.ResultBody.success;
 @RequestMapping("/users")
 @Tag(name = "UserController", description = "")
 public class UserController {
+
+
     /**
      * 服务对象
      */
     @Resource
     private UserService userService;
+
+
+    @GetMapping("list")
+    // @RequiresAuthentication
+    @RequiresRoles(value = {"admin"})
+    // @RequiresPermissions(value = {"user:list"})
+    public List<User> listUsers() {
+        return userService.list();
+    }
+
 
     /**
      * 分页查询所有数据

@@ -1,18 +1,14 @@
 package com.wink.music.entity.po;
 
-import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wink.music.common.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-
-import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * (Player)表实体类
@@ -22,6 +18,7 @@ import lombok.experimental.Accessors;
  */
 @SuppressWarnings("serial")
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @Schema(title = "player", description = "")
 @TableName("player")

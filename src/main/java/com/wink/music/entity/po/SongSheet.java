@@ -1,17 +1,13 @@
 package com.wink.music.entity.po;
 
-import java.util.Date;
-
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wink.music.common.entity.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-
-import lombok.Data;
 
 /**
  * (SongSheet)表实体类
@@ -21,6 +17,7 @@ import lombok.Data;
  */
 @SuppressWarnings("serial")
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Schema(title = "SongSheet", description = "")
 @TableName("song_sheet")
 public class SongSheet extends BaseEntity implements Serializable {

@@ -1,12 +1,10 @@
 package com.wink.music.entity.vo;
 
-import java.util.Date;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
 import java.io.Serializable;
-
-import lombok.Data;
+import java.util.Date;
 
 /**
  * (Song)VO实体类
@@ -21,7 +19,7 @@ public class SongVO implements Serializable {
 
     private static final long serialVersionUID = 479985325823154743L;
 
-    @Schema(title = "id", description = "${column.comment}")
+    @Schema(title = "id", description = "id")
     private Long id;
 
     /**

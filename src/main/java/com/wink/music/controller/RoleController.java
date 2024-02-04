@@ -18,7 +18,7 @@ import java.util.List;
  * @since 2024-02-02 15:30:54
  */
 @RestController
-@RequestMapping("/Roles")
+@RequestMapping("/role")
 @Tag(name = "RoleController", description = "")
 public class RoleController {
     /**

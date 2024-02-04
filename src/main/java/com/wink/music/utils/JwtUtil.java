@@ -32,7 +32,7 @@ public class JwtUtil {
     /**
      * 生成jwt token
      */
-    public String generateToken(String username) {
+    public static String generateToken(String username) {
         SecretKey signingKey = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
         //过期时间
         LocalDateTime tokenExpirationTime = LocalDateTime.now().plusMinutes(EXPIRE);
@@ -46,7 +46,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Claims getClaimsByToken(String token) {
+    public static Claims getClaimsByToken(String token) {
         SecretKey signingKey = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
         return Jwts.parser()
                 .verifyWith(signingKey)
@@ -60,7 +60,7 @@ public class JwtUtil {
      *
      * @return true：过期
      */
-    public boolean isTokenExpired(Date expiration) {
+    public static boolean isTokenExpired(Date expiration) {
         return expiration.before(new Date());
     }
 
@@ -70,7 +70,7 @@ public class JwtUtil {
      * @param filed
      * @return
      */
-    public String getClaimFiled(String token, String filed){
+    public static String getClaimFiled(String token, String filed){
         try{
             DecodedJWT jwt = JWT.decode(token);
             return jwt.getClaim(filed).asString();
@@ -81,14 +81,13 @@ public class JwtUtil {
     }
 
     public static void main(String[] args) {
-        JwtUtil jwtUtil = new JwtUtil();
-        String token = jwtUtil.generateToken("admin");
+        String token = generateToken("admin");
         System.out.println("token = " + token);
 
-        Claims claims = jwtUtil.getClaimsByToken(token);
+        Claims claims = getClaimsByToken(token);
         System.out.println("claims = " + claims);
 
-        String username = jwtUtil.getClaimFiled(token, "username");
+        String username = getClaimFiled(token, "username");
         System.out.println("username = " + username);
     }
 }

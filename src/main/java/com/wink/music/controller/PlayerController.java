@@ -9,11 +9,9 @@ import com.wink.music.entity.po.Player;
 import com.wink.music.service.PlayerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -54,6 +52,7 @@ public class PlayerController {
      */
     @GetMapping
     @Operation(summary = "分页查询")
+    //@RequiresAuthentication
     public ResultBody selectAll(Page<Player> page, Player player) {
         return success(this.playerService.page(page, new QueryWrapper<>(player)));
     }

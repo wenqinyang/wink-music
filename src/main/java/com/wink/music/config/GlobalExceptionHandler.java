@@ -20,6 +20,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+//    @ExceptionHandler(ShiroException.class)
+//    public ResultBody handle401(ShiroException e){
+//        return  ResultBody.error("401",e.getMessage());
+//    }
+
+
     /**
      * 处理自定义的业务异常
      */

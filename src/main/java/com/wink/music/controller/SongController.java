@@ -24,7 +24,7 @@ import static com.wink.music.common.resepons.ResultBody.success;
  * @since 2024-01-14 16:21:31
  */
 @RestController
-@RequestMapping("/songs")
+@RequestMapping("/song")
 @Tag(name = "SongController", description = "")
 public class SongController {
     /**

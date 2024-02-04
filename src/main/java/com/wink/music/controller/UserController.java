@@ -1,20 +1,25 @@
 package com.wink.music.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wink.music.common.resepons.ResultBody;
+import com.wink.music.entity.dto.UserLoginDTO;
 import com.wink.music.entity.po.User;
 import com.wink.music.service.UserService;
+import com.wink.music.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.apache.shiro.authz.annotation.RequiresRoles;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.Resource;
-
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.wink.music.common.resepons.ResultBody.success;
 
@@ -25,10 +30,9 @@ import static com.wink.music.common.resepons.ResultBody.success;
  * @since 2024-01-14 16:21:31
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 @Tag(name = "UserController", description = "")
 public class UserController {
-
 
     /**
      * 服务对象
@@ -36,27 +40,33 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    @PostMapping("/login")
+    public ResultBody login(@RequestBody @Validated UserLoginDTO userLoginDTO, HttpServletResponse response) {
+        String username = userLoginDTO.getUsername();
+        String password = userLoginDTO.getPassword();
+        User user = userService.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, userLoginDTO.getUsername()));
+        if (user == null) {
+            return ResultBody.error("用户名不存在");
+        }
 
-    @GetMapping("list")
-    // @RequiresAuthentication
-    @RequiresRoles(value = {"admin"})
-    // @RequiresPermissions(value = {"user:list"})
-    public List<User> listUsers() {
-        return userService.list();
+        if (!user.getPassword().equals(password)) {
+            return ResultBody.error("用户名或密码错误");
+        }
+
+        String token = JwtUtil.generateToken(username);
+        response.setHeader(JwtUtil.HEADER, token);
+        response.setHeader("Access-control-Expost-Headers", JwtUtil.HEADER);
+        Map<String, String> map = new HashMap<>();
+        map.put("token", token);
+        return ResultBody.success(map);
     }
 
-
-    /**
-     * 分页查询所有数据
-     *
-     * @param page 分页对象
-     * @param user 查询实体
-     * @return 所有数据
-     */
-    @GetMapping
-    @Operation(summary = "分页查询")
-    public ResultBody selectAll(Page<User> page, User user) {
-        return success(this.userService.page(page, new QueryWrapper<>(user)));
+    @RequiresAuthentication
+    @GetMapping("/logout")
+    public ResultBody logout() {
+        // 退出登录
+        SecurityUtils.getSubject().logout();
+        return ResultBody.success();
     }
 
     /**
@@ -67,6 +77,7 @@ public class UserController {
      */
     @GetMapping("{id}")
     @Operation(summary = "通过主键查询")
+    @RequiresAuthentication
     public ResultBody selectOne(@PathVariable Serializable id) {
         return success(this.userService.getById(id));
     }

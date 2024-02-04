@@ -15,8 +15,7 @@ public class JwtToken implements AuthenticationToken {
 
     public JwtToken(String token){
         this.token = token;
-        JwtUtil jwtUtil = new JwtUtil();
-        this.username = jwtUtil.getClaimFiled(token, "username");
+        this.username = JwtUtil.getClaimFiled(token, "username");
     }
 
     /**

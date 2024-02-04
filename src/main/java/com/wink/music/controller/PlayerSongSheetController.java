@@ -24,7 +24,7 @@ import static com.wink.music.common.resepons.ResultBody.success;
  * @since 2024-01-14 16:21:30
  */
 @RestController
-@RequestMapping("/playerSongSheets")
+@RequestMapping("/playerSongSheet")
 @Tag(name = "PlayerSongSheetController", description = "")
 public class PlayerSongSheetController {
     /**

@@ -7,7 +7,6 @@ import com.wink.music.excetion.BizException;
 import com.wink.music.service.UserService;
 import com.wink.music.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
-import jakarta.annotation.Resource;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -21,8 +20,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountRealm extends AuthorizingRealm {
 
-    @Resource
-    private JwtUtil jwtUtil;
 
     @Autowired
     private UserService userService;
@@ -44,7 +41,7 @@ public class AccountRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String jwt = (String) authenticationToken.getCredentials();
         // 获取jwt中关于用户名
-        String username = jwtUtil.getClaimsByToken(jwt).getSubject();
+        String username = JwtUtil.getClaimsByToken(jwt).getSubject();
         // 查询用户
         User user = userService.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
         if (user == null) {
@@ -54,8 +51,8 @@ public class AccountRealm extends AuthorizingRealm {
             throw new BizException(ResultCodeEnum.LOCKED_USER.getCode(), "用户被锁定");
         }
 
-        Claims claims = jwtUtil.getClaimsByToken(jwt);
-        if (jwtUtil.isTokenExpired(claims.getExpiration())) {
+        Claims claims = JwtUtil.getClaimsByToken(jwt);
+        if (JwtUtil.isTokenExpired(claims.getExpiration())) {
             throw new BizException(ResultCodeEnum.EXPIRE_TOKEN.getCode(), "token过期，请重新登录");
         }
         return new SimpleAuthenticationInfo(user, jwt, getName());

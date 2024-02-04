@@ -1,7 +1,10 @@
 package com.wink.music.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wink.music.entity.po.Permission;
 import com.wink.music.entity.po.User;
+
+import java.util.List;
 
 /**
  * (User)表服务接口
@@ -15,5 +18,7 @@ public interface UserService extends IService<User> {
      * 检查用户状态
      */
     boolean checkUserStatus(Long userId);
+
+    List<Permission> getPermissionByUsername(String username);
 }
 

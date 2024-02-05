@@ -1,5 +1,8 @@
 package com.wink.music.config.shiro;
 
+import com.alibaba.fastjson2.JSON;
+import com.wink.music.common.resepons.ResultBody;
+import com.wink.music.common.resepons.ResultCodeEnum;
 import com.wink.music.utils.JwtUtil;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -53,12 +56,7 @@ public class JwtFilter extends AccessControlFilter {
         String token = request.getHeader(JwtUtil.HEADER);
         //如果token为空的话，返回true，交给控制层@RequiresAuthentication进行判断；也会达到没有权限的作用
         if (token == null) {
-//            // 没有找到Token，可以根据需要返回401状态码
-//            HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
-//            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            httpResponse.getWriter().write("No Token Found");
-            return false; // 停止过滤器链，请求结束
-            //return true;
+            return true;
         }
         JwtToken jwtToken = new JwtToken(token);
         try {
@@ -66,6 +64,7 @@ public class JwtFilter extends AccessControlFilter {
             getSubject(servletRequest, servletResponse).login(jwtToken);
         } catch (Exception e) {
             log.error("Subject login error:", e);
+            onLoginFail(servletResponse);
             return false;
         }
         //如果走到这里，那么就返回true，代表登录成功
@@ -76,11 +75,9 @@ public class JwtFilter extends AccessControlFilter {
     private void onLoginFail(ServletResponse response) throws IOException {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        httpServletResponse.getWriter().print("login error");
-
-
-
-
+        httpServletResponse.setContentType("application/json;charset=UTF-8");
+        ResultBody error = ResultBody.error(ResultCodeEnum.USER_LOGIN_FAIL);
+        httpServletResponse.getWriter().print(JSON.toJSONString(error));
 
     }
 }

@@ -46,7 +46,7 @@ public class UserController {
     public ResultBody login(@RequestBody @Validated UserLoginForm userLoginForm, HttpServletResponse response) {
         UserVO user = userService.checkUserLogin(userLoginForm);
         if (ObjectUtils.isEmpty(user)) {
-            return ResultBody.error(ResultCodeEnum.LOGIN_ERROR.getCode(), ResultCodeEnum.LOGIN_ERROR.getMessage());
+            return ResultBody.error(ResultCodeEnum.USER_USERNAME_OR_PASSWORD_ERROR);
         }
         String token = JwtUtil.generateToken(user.getUsername());
         response.setHeader(JwtUtil.HEADER, token);
@@ -72,7 +72,7 @@ public class UserController {
      */
     @GetMapping("{id}")
     @Operation(summary = "通过主键查询")
-    //@RequiresAuthentication
+    @RequiresAuthentication
     public ResultBody selectOne(@PathVariable Serializable id) {
         return success(this.userService.getById(id));
     }

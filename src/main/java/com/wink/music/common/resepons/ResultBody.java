@@ -2,14 +2,12 @@ package com.wink.music.common.resepons;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.wink.music.excetion.BaseErrorInfoInterface;
-import lombok.Data;
-
-import java.io.Serializable;
+import lombok.experimental.Accessors;
 
 /**
  * @author wenqin
  */
-
+@Accessors(chain = true)
 public class ResultBody {
     /**
      * 响应代码

@@ -11,3 +11,8 @@ music:
   analysis-addr: https://music.cyrilstudio.top
   api-path:
     check-music: /check/music
+logging:
+  level:
+    org:
+      apache:
+        shiro=DEBUG:

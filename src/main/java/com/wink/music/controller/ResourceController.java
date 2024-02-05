@@ -35,7 +35,7 @@ public class ResourceController {
             Resource resource = new ClassPathResource("static/player/js/player.js");
             return new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
         }
-        throw new BizException(ResultCodeEnum.INVALID_USER);
+        throw new BizException(ResultCodeEnum.USER_INVALID);
     }
 
 

@@ -53,20 +53,19 @@ public class AccountRealm extends AuthorizingRealm {
         if (StringUtils.isBlank(token)) {
             throw new AuthenticationException("token cannot be empty.");
         }
-        // 获取jwt中关于用户名
+        // 获取jwt中用户名
         String username = JwtUtil.getClaimsByToken(token).getSubject();
         // 查询用户
         User user = userService.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
         if (user == null) {
-            throw new BizException(ResultCodeEnum.NON_EXIST_USER.getCode(), "用户不存在");
+            throw new BizException(ResultCodeEnum.USER_NOT_EXIST);
         }
         if (!user.isStatus()) {
-            throw new BizException(ResultCodeEnum.LOCKED_USER.getCode(), "用户被锁定");
+            throw new BizException(ResultCodeEnum.USER_LOCKED);
         }
-
         Claims claims = JwtUtil.getClaimsByToken(token);
         if (JwtUtil.isTokenExpired(claims.getExpiration())) {
-            throw new BizException(ResultCodeEnum.EXPIRE_TOKEN.getCode(), "token过期，请重新登录");
+            throw new BizException(ResultCodeEnum.USER_TOKEN_EXPIRE);
         }
         return new SimpleAuthenticationInfo(user, token, getName());
     }

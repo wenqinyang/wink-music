@@ -12,7 +12,7 @@ public class WinkMusicApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(WinkMusicApplication.class, args);
-        AppInfo.getAppInfo(context);//https://juejin.cn/post/7225063837401481275?from=search-suggest
+        AppInfo.getAppInfo(context);
     }
 
 }

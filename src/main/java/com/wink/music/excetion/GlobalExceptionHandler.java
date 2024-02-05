@@ -5,11 +5,10 @@ import com.wink.music.common.resepons.ResultCodeEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
-import org.springframework.http.HttpStatus;
+import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * This class is for
@@ -22,10 +21,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(value = ShiroException.class)
+    @ResponseBody
+    @ExceptionHandler(value = AuthorizationException.class)
     public ResultBody handle401(ShiroException e){
-        return  ResultBody.error(ResultCodeEnum.SIGNATURE_NOT_MATCH.getCode(), e.getMessage());
+        return  ResultBody.error(ResultCodeEnum.SIGNATURE_NOT_MATCH.getCode(), ResultCodeEnum.SIGNATURE_NOT_MATCH.getMessage());
     }
 
 

@@ -78,6 +78,5 @@ public class JwtFilter extends AccessControlFilter {
         httpServletResponse.setContentType("application/json;charset=UTF-8");
         ResultBody error = ResultBody.error(ResultCodeEnum.USER_LOGIN_FAIL);
         httpServletResponse.getWriter().print(JSON.toJSONString(error));
-
     }
 }

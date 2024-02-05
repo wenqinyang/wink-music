@@ -6,9 +6,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
 import org.apache.shiro.authz.AuthorizationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * This class is for
@@ -23,8 +25,9 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(value = AuthorizationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResultBody handle401(ShiroException e){
-        return  ResultBody.error(ResultCodeEnum.SIGNATURE_NOT_MATCH.getCode(), ResultCodeEnum.SIGNATURE_NOT_MATCH.getMessage());
+        return  ResultBody.error(ResultCodeEnum.USER_SIGNATURE_NOT_MATCH);
     }
 
 
@@ -45,7 +48,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResultBody exceptionHandler(HttpServletRequest req, NullPointerException e){
         log.error("发生空指针异常！原因是:",e);
-        return ResultBody.error(ResultCodeEnum.BODY_NOT_MATCH);
+        return ResultBody.error(ResultCodeEnum.PARAM_BODY_NOT_MATCH);
     }
 
 

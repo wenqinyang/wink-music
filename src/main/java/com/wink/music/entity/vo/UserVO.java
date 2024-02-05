@@ -1,12 +1,10 @@
 package com.wink.music.entity.vo;
 
-import java.util.Date;
-
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
 import java.io.Serializable;
-
-import lombok.Data;
+import java.util.Date;
 
 /**
  * (User)VO实体类
@@ -52,7 +50,7 @@ public class UserVO implements Serializable {
      * 状态 1:启用 0:禁用
      */
     @Schema(title = "status", description = "状态 1:启用 0:禁用")
-    private Integer status;
+    private boolean status;
 
     /**
      * 创建时ip

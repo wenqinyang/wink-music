@@ -1,16 +1,18 @@
 package com.wink.music.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wink.music.common.resepons.ResultBody;
-import com.wink.music.entity.dto.UserLoginDTO;
+import com.wink.music.common.resepons.ResultCodeEnum;
+import com.wink.music.entity.form.UserLoginForm;
 import com.wink.music.entity.po.User;
+import com.wink.music.entity.vo.UserVO;
 import com.wink.music.service.UserService;
 import com.wink.music.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.validation.annotation.Validated;
@@ -41,19 +43,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/login")
-    public ResultBody login(@RequestBody @Validated UserLoginDTO userLoginDTO, HttpServletResponse response) {
-        String username = userLoginDTO.getUsername();
-        String password = userLoginDTO.getPassword();
-        User user = userService.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, userLoginDTO.getUsername()));
-        if (user == null) {
-            return ResultBody.error("用户名不存在");
+    public ResultBody login(@RequestBody @Validated UserLoginForm userLoginForm, HttpServletResponse response) {
+        UserVO user = userService.checkUserLogin(userLoginForm);
+        if (ObjectUtils.isEmpty(user)) {
+            return ResultBody.error(ResultCodeEnum.LOGIN_ERROR.getCode(), ResultCodeEnum.LOGIN_ERROR.getMessage());
         }
-
-        if (!user.getPassword().equals(password)) {
-            return ResultBody.error("用户名或密码错误");
-        }
-
-        String token = JwtUtil.generateToken(username);
+        String token = JwtUtil.generateToken(user.getUsername());
         response.setHeader(JwtUtil.HEADER, token);
         response.setHeader("Access-control-Expost-Headers", JwtUtil.HEADER);
         Map<String, String> map = new HashMap<>();
@@ -77,7 +72,7 @@ public class UserController {
      */
     @GetMapping("{id}")
     @Operation(summary = "通过主键查询")
-    @RequiresAuthentication
+    //@RequiresAuthentication
     public ResultBody selectOne(@PathVariable Serializable id) {
         return success(this.userService.getById(id));
     }

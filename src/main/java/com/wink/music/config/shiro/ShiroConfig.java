@@ -62,7 +62,7 @@ public class ShiroConfig {
 
         // 拦截器
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        map.put("/login", "anon");
+       // map.put("/music/login", "anon");
         map.put("/**", "jwt");
         shiroFilter.setFilterChainDefinitionMap(map);
         return shiroFilter;

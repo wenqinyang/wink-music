@@ -79,15 +79,4 @@ public class JwtUtil {
             return null;
         }
     }
-
-    public static void main(String[] args) {
-        String token = generateToken("admin");
-        System.out.println("token = " + token);
-
-        Claims claims = getClaimsByToken(token);
-        System.out.println("claims = " + claims);
-
-        String username = getClaimFiled(token, "username");
-        System.out.println("username = " + username);
-    }
 }

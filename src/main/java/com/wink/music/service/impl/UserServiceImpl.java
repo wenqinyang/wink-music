@@ -4,10 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wink.music.convert.UserConvert;
+import com.wink.music.entity.form.UserLoginForm;
 import com.wink.music.entity.po.Permission;
 import com.wink.music.entity.po.RolePermission;
 import com.wink.music.entity.po.User;
 import com.wink.music.entity.po.UserRole;
+import com.wink.music.entity.vo.UserVO;
 import com.wink.music.mapper.UserMapper;
 import com.wink.music.service.PermissionService;
 import com.wink.music.service.RolePermissionService;
@@ -38,6 +41,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Resource
     private PermissionService permissionService;
 
+    @Resource
+    private UserConvert userConvert;
+
     @Override
     public List<Permission> getPermissionByUsername(String username) {
         List<Permission> permissions = new ArrayList<>();
@@ -56,6 +62,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         }
         return permissions;
+    }
+
+    @Override
+    public UserVO checkUserLogin(UserLoginForm userLoginForm) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUsername, userLoginForm.getUsername());
+        queryWrapper.eq(User::getPassword, userLoginForm.getPassword());
+        return userConvert.toUserVO(this.getOne(queryWrapper));
     }
 
     @Override

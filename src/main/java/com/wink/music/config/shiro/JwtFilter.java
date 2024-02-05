@@ -53,7 +53,12 @@ public class JwtFilter extends AccessControlFilter {
         String token = request.getHeader(JwtUtil.HEADER);
         //如果token为空的话，返回true，交给控制层@RequiresAuthentication进行判断；也会达到没有权限的作用
         if (token == null) {
-            return true;
+//            // 没有找到Token，可以根据需要返回401状态码
+//            HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+//            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            httpResponse.getWriter().write("No Token Found");
+            return false; // 停止过滤器链，请求结束
+            //return true;
         }
         JwtToken jwtToken = new JwtToken(token);
         try {
@@ -72,5 +77,10 @@ public class JwtFilter extends AccessControlFilter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         httpServletResponse.getWriter().print("login error");
+
+
+
+
+
     }
 }

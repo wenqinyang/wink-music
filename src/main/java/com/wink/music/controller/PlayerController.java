@@ -1,11 +1,13 @@
 package com.wink.music.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.pagehelper.page.PageMethod;
+import com.wink.music.common.resepons.PageInfo;
 import com.wink.music.common.resepons.ResultBody;
+import com.wink.music.common.resepons.PageBean;
 import com.wink.music.entity.form.PlayerForm;
 import com.wink.music.entity.po.Player;
+import com.wink.music.entity.vo.PlayerVO;
 import com.wink.music.service.PlayerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,6 +33,7 @@ public class PlayerController {
 
     @Resource
     private PlayerService playerService;
+
     /**
      * 新增数据
      *
@@ -46,15 +49,13 @@ public class PlayerController {
     /**
      * 分页查询所有数据
      *
-     * @param page   分页对象
-     * @param player 查询实体
      * @return 所有数据
      */
     @GetMapping
     @Operation(summary = "分页查询")
-    //@RequiresAuthentication
-    public ResultBody selectAll(Page<Player> page, Player player) {
-        return success(this.playerService.page(page, new QueryWrapper<>(player)));
+    public ResultBody selectAll(@ModelAttribute PageInfo pageInfo) {
+        PageBean<PlayerVO> playerListByPage = playerService.getPlayerListByPage(pageInfo);
+        return success(playerListByPage);
     }
 
     /**

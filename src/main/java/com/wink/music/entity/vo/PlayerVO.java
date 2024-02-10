@@ -21,7 +21,7 @@ public class PlayerVO implements Serializable {
 
     private static final long serialVersionUID = -11265231929780537L;
 
-    @Schema(title = "id", description = "${column.comment}")
+    @Schema(title = "id", description = "主键id")
     private Long id;
 
     /**
@@ -29,12 +29,6 @@ public class PlayerVO implements Serializable {
      */
     @Schema(title = "name", description = "播放器名称")
     private String name;
-
-    /**
-     * 关联用户id
-     */
-    @Schema(title = "userId", description = "关联用户id")
-    private Long userId;
 
     /**
      * 是否自动播放
@@ -121,23 +115,10 @@ public class PlayerVO implements Serializable {
     private Date createTime;
 
     /**
-     * 记录更新时间
-     */
-    @Schema(title = "updateTime", description = "记录更新时间")
-    private Date updateTime;
-
-    /**
      * 记录创建者
      */
     @Schema(title = "createBy", description = "记录创建者")
     private Long createBy;
-
-    /**
-     * 记录更新者
-     */
-    @Schema(title = "updateBy", description = "记录更新者")
-    private Long updateBy;
-
 
 }
 
